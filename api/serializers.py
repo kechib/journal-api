@@ -1,8 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from .models.journal import Journal
 from .models.mango import Mango
 from .models.user import User
+
+class JournalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Journal
+        fields = ('id', 'title', 'content', 'created_at', 'updated_at','feeling', 'owner')
 
 class MangoSerializer(serializers.ModelSerializer):
     class Meta:

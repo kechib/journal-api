@@ -65,45 +65,6 @@ class JournalDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def partial_update(self, request, pk):
         """Update Request"""
-        # Remove owner from request object
-        # This "gets" the owner key on the data['journal'] dictionary
-        # and returns False if it doesn't find it. So, if it's found we
-        # remove it.
-        if request.data['journal'].get('owner', False):
-            del request.data['journal']['owner']
-
-        # Locate Journal
-        # get_object_or_404 returns a object representation of our Journal
-        journal = get_object_or_404(Journal, pk=pk)
-        # Check if user is the same as the request.user.id
-        if not request.user.id == journal.owner.id:
-            raise PermissionDenied('Unauthorized, you do not own this journal')
-
-        # Add owner to data object now that we know this user owns the resource
-        request.data['journal']['owner'] = request.user.id
-        # Validate updates with serializer
-        data = JournalSerializer(Journal, data=request.data['journal'])
-        if data.is_valid():
-            # Save & send a 204 no content
-            data.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        # If the data is not valid, return a response with the errors
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
-    class JournalDetail(generics.RetrieveUpdateDestroyAPIView):
-    def get(self, request, pk):
-        """Show request"""
-        journal = get_object_or_404(Journal, pk=pk)
-        data = MangoSerializer(journal).data
-        return Response(data)
-    def delete(self, request, pk):
-        """Delete request"""
-        journal = get_object_or_404(Journal, pk=pk)
-        if not request.user.id == journal.owner.id:
-            raise PermissionDenied('You do not own this journal')
-        journal.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    def partial_update(self, request, pk):
-        """Update Request"""
         # 1. Check if there's an `owner` key on the incoming data
         # We don't want people to physically update the `owner` of a journal
         # later, after we already set the owner on create
@@ -124,7 +85,9 @@ class JournalDetail(generics.RetrieveUpdateDestroyAPIView):
         # and makes step #1 redundant
         request.data['journal']['owner'] = request.user.id
         # Validate updates with serializer
-        ms = MangoSerializer(journal, data=request.data['journal'])
+        ms = JournalSerializer(journal, data=request.data['journal'])
+        # Allow a partial update w/ our serializer by passing `partial` as True
+        ms = JournalSerializer(journal, data=request.data['journal'], partial=True)
         if ms.is_valid():
             ms.save()
             return Response(ms.data)
