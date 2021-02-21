@@ -1,2 +1,2 @@
-DROP DATABASE IF EXISTS journal;
-CREATE DATABASE journal;
+DROP DATABASE IF EXISTS journal_api;
+CREATE DATABASE journal_api;

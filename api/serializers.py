@@ -8,7 +8,7 @@ from .models.user import User
 class JournalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Journal
-        fields = ('id', 'title', 'content', 'created_at', 'updated_at','feeling', 'owner')
+        fields = ('id', 'title', 'content', 'created', 'updated','feeling', 'owner')
 
 class MangoSerializer(serializers.ModelSerializer):
     class Meta:
