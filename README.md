@@ -21,13 +21,12 @@ Journal Mia is a music journal web application that allows users to create an ac
 
 
 ## User Stories
-User
 
 - As a user I want to be able to sign-up/sign-in
 -	As a user I want to be able to change-password
 -	As a user I want to be able to sign-out
 
-Journal
+## Journal Stories
 
 -	As a user I want to make a journal entry
 -	As a user I want to view a single journal entry
